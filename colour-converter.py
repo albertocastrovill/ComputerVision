@@ -80,8 +80,22 @@ def convert_rgb2hsi(img: cv2) -> cv2:
     Returns:
         The HSI image
     """
-    hsi_img = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+    hsi_img = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
     return hsi_img
+
+# Define the funcition to convert the image from HSI to RGB
+def convert_hsi2rgb(img: cv2) -> cv2:
+    """
+    Covert the image from RGB to HSI
+    
+    Args: 
+        img: The image to convert
+        
+    Returns: 
+        The RGB image
+    """
+    rgb_img = cv2.cvtColor(img, cv2.COLOR_HLS2RGB)
+    return rgb_img
 
 # Define the function to visualise both images
 def visualise_images(img1: cv2, img2: cv2, title1: str, title2: str):
@@ -96,6 +110,8 @@ def visualise_images(img1: cv2, img2: cv2, title1: str, title2: str):
     """
     cv2.imshow(title1, img1)
     cv2.imshow(title2, img2)
+    # If you dont have an HSI image, use the line below, and use the image you just saved 
+    # cv2.imwrite("imageHSI.jpeg",img2)
     cv2.waitKey(0)
 
 # Define function to close all windows
@@ -122,6 +138,9 @@ def pipeline():
     elif args.conversion == "RGB2HSI":
         img_converted = convert_rgb2hsi(img)
         title = "HSI Image"
+    elif args.conversion == "HSI2RGB":
+        img_converted = convert_hsi2rgb(img)
+        title = "HSI to RGB Image"
     else:
         print(f"ERROR! - Conversion type {args.conversion} is not supported")
     
@@ -132,6 +151,10 @@ def pipeline():
 if __name__ == "__main__":
     pipeline()
     print('Program finished!\n')
+
+
+
+
 
 
 
