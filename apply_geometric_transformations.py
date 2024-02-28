@@ -84,11 +84,13 @@ def run_pipeline():
     visualise_image(img_translated, 'Translated image')
     visualise_image(img_reflected, 'Reflected image')
 
+    """
     # Combina y visualiza las imágenes
     #images = [img, img_rotated, img_translated, img_reflected]
     #titles = ['Input image', 'Rotated image', 'Translated image', 'Reflected image']
     #visualise_combined_image(images, titles)
-
+    """
+    
     close_windows()
     print('Program finished!\n')
 
