@@ -39,6 +39,10 @@ def load_image(filename: str) -> cv2:
     img = cv2.imread(filename)
     if img is None:
         print(f"ERROR! - Image {filename} could not be read")
+
+    # Resize image
+    img = cv2.resize(img, (640, 480))
+
     return img
 
 # Define the function to convert the image to grayscale
@@ -97,6 +101,45 @@ def convert_hsi2rgb(img: cv2) -> cv2:
     rgb_img = cv2.cvtColor(img, cv2.COLOR_HLS2RGB)
     return rgb_img
 
+"""
+def convert_hsi2rgb(img: cv2) -> cv2:
+
+    # Dividir la imagen en sus componentes HSI
+    h, s, i = cv2.split(img)
+    
+    # Normalizar los valores de HSI al rango adecuado
+    h = h / 180.0 * np.pi
+    s = s / 255.0
+    i = i * 255.0
+    
+    # Inicializar los componentes de color RGB
+    r, g, b = np.zeros_like(h), np.zeros_like(h), np.zeros_like(h)
+    
+    # Caso 1: 0 <= H < 2*pi/3
+    idx = (0 <= h) & (h < 2*np.pi/3)
+    b[idx] = i[idx] * (1 - s[idx])
+    r[idx] = i[idx] * (1 + s[idx] * np.cos(h[idx]) / np.cos(np.pi/3 - h[idx]))
+    g[idx] = 3 * i[idx] - (r[idx] + b[idx])
+    
+    # Caso 2: 2*pi/3 <= H < 4*pi/3
+    idx = (2*np.pi/3 <= h) & (h < 4*np.pi/3)
+    r[idx] = i[idx] * (1 - s[idx])
+    g[idx] = i[idx] * (1 + s[idx] * np.cos(h[idx] - 2*np.pi/3) / np.cos(np.pi - h[idx]))
+    b[idx] = 3 * i[idx] - (r[idx] + g[idx])
+    
+    # Caso 3: 4*pi/3 <= H < 2*pi
+    idx = (4*np.pi/3 <= h) & (h < 2*np.pi)
+    g[idx] = i[idx] * (1 - s[idx])
+    b[idx] = i[idx] * (1 + s[idx] * np.cos(h[idx] - 4*np.pi/3) / np.cos(np.pi/3 - h[idx]))
+    r[idx] = 3 * i[idx] - (g[idx] + b[idx])
+    
+    # Apilar los componentes de color RGB en una imagen
+    rgb_image = cv2.merge((b, g, r))
+    
+    # Convertir los valores RGB al rango [0, 255] y devolver la imagen
+    return np.clip(rgb_image, 0, 255).astype(np.uint8)
+"""
+
 # Define the function to visualise both images
 def visualise_images(img1: cv2, img2: cv2, title1: str, title2: str):
     """
@@ -110,8 +153,16 @@ def visualise_images(img1: cv2, img2: cv2, title1: str, title2: str):
     """
     cv2.imshow(title1, img1)
     cv2.imshow(title2, img2)
+
+    hsi_image = cv2.imread("imageHSI-1.jpeg")
+    hsi_image = cv2.resize(hsi_image, (640, 480))
+    #Re convertir la imagen a RGB
+    img3 = cv2.cvtColor(hsi_image, cv2.COLOR_HLS2RGB)
+
+    cv2.imshow("new RGB Image", img3)
+
     # If you dont have an HSI image, use the line below, and use the image you just saved 
-    # cv2.imwrite("imageHSI.jpeg",img2)
+    #cv2.imwrite("imageHSI-2.jpeg",img2)
     cv2.waitKey(0)
 
 # Define function to close all windows
